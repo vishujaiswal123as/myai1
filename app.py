@@ -18,9 +18,6 @@ import wikipedia
 import os
 import speech_recognition as sr
 
-import urllib.request
-import cv2
-import numpy as np
 import datetime
 import random
 import psutil  # for battery
@@ -264,17 +261,6 @@ def main2():
             webbrowser.open('google.com')
         elif ('open whatsappweb' in user_question):
             webbrowser.open('whatsappweb.com')
-        elif ('open mobile camera' in user_question or 'open camera' in user_question):
-            URL = 'http://192.168.238.207:8080/shot.jpg'
-            while True:
-                img_arr = np.array(
-                    bytearray(urllib.request.urlopen(URL).read()), dtype=np.uint8)
-                img = cv2.imdecode(img_arr, -1)
-                cv2.imshow('IPWebcam', img)
-                q = cv2.waitKey(1)
-                if q == ord('q'):
-                    break
-            cv2.destroyAllWindows()
         elif ('the time' in user_question or 'what\'s the time' in user_question):
             strTime = datetime.datetime.now().strftime("%H:%M")
             speak(f" the time is {strTime}")
