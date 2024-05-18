@@ -11,7 +11,7 @@ from rembg import remove
 from PIL import Image
 
 # # from pywikihow import search_wikihow
-import pyttsx3
+# import pyttsx3
 import time
 import webbrowser
 import wikipedia
@@ -28,44 +28,44 @@ import psutil  # for battery
 # # langchain-groq
 # # python-dotenv
 
-engine = pyttsx3.init('sapi5')
-voices = engine.getProperty('voices')
+# engine = pyttsx3.init('sapi5')
+# voices = engine.getProperty('voices')
 
-# for i in range(len(voices)):
-#  print(voices[i].id)
-# #  o and 1 is same voices 4 is female zira
-# print(voices[1].id)
-# print(voices[2].id)
+# # for i in range(len(voices)):
+# #  print(voices[i].id)
+# # #  o and 1 is same voices 4 is female zira
+# # print(voices[1].id)
+# # print(voices[2].id)
 
-engine.setProperty('voice', voices[4].id)
-# engine.setProperty('rate',200)
+# engine.setProperty('voice', voices[4].id)
+# # engine.setProperty('rate',200)
 
-# def speak(audio):
-#    engine.say(audio)
-#    engine.runAndWait()
+# # # def speak(audio):
+# #    engine.say(audio)
+# #    engine.runAndWait()
 
-# engine = pyttsx3.init()
+# # engine = pyttsx3.init()
 
-def speak(text):
-  try:
-    global engine
+# # def speak(text):
+#   try:
+#     global engine
 
-    # Stop the engine if it's still running
-    engine.stop()
+#     # Stop the engine if it's still running
+#     engine.stop()
 
-    # Clear the previous speech buffer
-    engine.say("")
+#     # Clear the previous speech buffer
+#     engine.say("")
 
-    # Convert the text to speech
-    engine.say(text)
+#     # Convert the text to speech
+#     engine.say(text)
 
-    # Start the engine's run loop and wait for it to finish
-    engine.runAndWait()
+#     # Start the engine's run loop and wait for it to finish
+#     engine.runAndWait()
 
-    # Wait for any currently running tasks to complete
-    engine.idle()
-  except:
-      pass
+#     # Wait for any currently running tasks to complete
+#     engine.idle()
+#   except:
+#       pass
     
 def takecommand():
     #  It takes microphone input from the user and returns string output
@@ -92,14 +92,14 @@ def wish_me():
     timee = int(time.strftime('%H'))
     # st.write(timee)
     if (5 <= timee and timee < 12):
-        speak('Good morning sir')
+        st.write('Good morning sir')
     elif (12 <= timee and timee < 17):
-        speak('Good afternoon sir')
+        st.write('Good afternoon sir')
     elif (17 <= timee and timee <= 20):
-        speak('Good evening sir')
+        st.write('Good evening sir')
     else:
-        speak('Night time')
-    speak('I am a jarvish. please tell me how may i help you')
+        st.write('Night time')
+    st.write('I am a jarvish. please tell me how may i help you')
 
 
 load_dotenv()
@@ -233,7 +233,7 @@ def main2():
     if st.button('Run'):
         user_question = takecommand().lower()
         st.write(user_question)
-        speak(user_question)
+        # speak(user_question)
         if user_question == 'what is my name' or user_question == "what's my name" or user_question=='who developed you':
             st.write('Your name is vishal')
         elif "what's the time" ==user_question or "what is the time" ==user_question or "what's the current time" ==user_question:
@@ -243,18 +243,18 @@ def main2():
         elif 'remove background' in user_question and len(user_question)<30 or 'background remove' in user_question and len(user_question)<30:
             remove_background()
         elif ('wikipedia' in user_question):
-            speak('Searching Wikipedia.. \njust a moment')
+            # speak('Searching Wikipedia.. \njust a moment')
             user_question = user_question.replace('wikipedia', '')
             results = wikipedia.summary(user_question, sentences=2)
-            speak(f'According to wikipedia')
+            # speak(f'According to wikipedia')
             st.write(results)
-            speak(results)
+            # speak(results)
         elif ('am i audiable' in user_question or 'can you listen me' in user_question or 'am I audible' in user_question):
             st.write(f'yes')
-            speak(f'yes ')
+            # speak(f'yes ')
         elif ('where i am currently' in user_question or 'my current location' in user_question):
             st.write(f'you are in your room at present, i think')
-            speak(f'you are in your room at present, i think')
+            # speak(f'you are in your room at present, i think')
         elif ('open youtube' in user_question):
             webbrowser.open('youtube.com')
         elif ('open google' in user_question):
@@ -263,23 +263,23 @@ def main2():
             webbrowser.open('whatsappweb.com')
         elif ('the time' in user_question or 'what\'s the time' in user_question):
             strTime = datetime.datetime.now().strftime("%H:%M")
-            speak(f" the time is {strTime}")
+            # speak(f" the time is {strTime}")
         # elif ('activate how to do mode' in user_question or 'activate mode' in user_question):
-        #     speak(f'how to do mode is Activated. now what i do')
+        # #     speak(f'how to do mode is Activated. now what i do')
         #     how = takecommand().lower()
         #     max_result = 1
         #     how_to = search_wikihow(how, max_result)
         #     assert len(how_to) == 1
         #     how_to[0].st.write()
-        #     speak(how_to[0].summary)
+        # #     speak(how_to[0].summary)
         elif ('how much bettery' in user_question or 'how much power' in user_question or 'how much power left' in user_question):
             battry = psutil.sensors_battery()
             percentage = battry.percent
             st.write(f'our system has {percentage} percent battery power')
-            speak(f'our system has {percentage} percent battery power')
+            # speak(f'our system has {percentage} percent battery power')
         elif ('play the music' in user_question or 'play music' in user_question or 'open music' in user_question or 'sing a song' in user_question):
             st.write(f'sure ')
-            speak(f'sure ')
+            # speak(f'sure ')
             music_dir = 'e:\\songs1'
             songs = os.listdir(music_dir)
             rand = random.randint(0, len(songs))
@@ -294,7 +294,7 @@ def main2():
                 os.startfile(os.path.join(music_dir, songs[rand+count]))
             else:
                 st.write(f'song list is ended')
-                speak(f'song list is ended')
+                # speak(f'song list is ended')
         elif ('open browser' in user_question):
             codepath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
             os.startfile(codepath)
