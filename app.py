@@ -10,9 +10,8 @@ import os
 from rembg import remove
 from PIL import Image
 
-from pywikihow import search_wikihow
+# # from pywikihow import search_wikihow
 import pyttsx3
-# import cv2
 import time
 import webbrowser
 import wikipedia
@@ -44,9 +43,32 @@ voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[4].id)
 # engine.setProperty('rate',200)
 
-def speak(audio):
-   engine.say(audio)
-   engine.runAndWait()
+# def speak(audio):
+#    engine.say(audio)
+#    engine.runAndWait()
+
+# engine = pyttsx3.init()
+
+def speak(text):
+  try:
+    global engine
+
+    # Stop the engine if it's still running
+    engine.stop()
+
+    # Clear the previous speech buffer
+    engine.say("")
+
+    # Convert the text to speech
+    engine.say(text)
+
+    # Start the engine's run loop and wait for it to finish
+    engine.runAndWait()
+
+    # Wait for any currently running tasks to complete
+    engine.idle()
+  except:
+      pass
     
 def takecommand():
     #  It takes microphone input from the user and returns string output
@@ -61,14 +83,11 @@ def takecommand():
         st.write("Recognizing...")
         query = r.recognize_google(audio, language='en-in')  # .lower()
         st.write(f"User said: {query}\n")
-      # #   speak(f"User said: {query}")
 
     except Exception as e:
       #   st.write(e)
         st.write("Say that again please...")
-        # takecommand()
-      #   return "None"
-    speak(query)
+
     return query
 
 
@@ -82,7 +101,7 @@ def wish_me():
     elif (17 <= timee and timee <= 20):
         speak('Good evening sir')
     else:
-        speak('Good night sir\n please take a break')
+        speak('Night time')
     speak('I am a jarvish. please tell me how may i help you')
 
 
@@ -136,10 +155,10 @@ def main():
 
     if user_question == 'what is my name' or user_question == "what's my name":
         st.write('Your name is vishal')
-    # elif user_question == 'who made you' or user_question == 'who makes you' or user_question == "who make's you":
-    #     st.write('i made by vishal')
-    # elif 'remove background' in user_question or 'background remove' in user_question:
-    #     remove_background()
+    elif user_question == 'who made you' or user_question == 'who makes you' or user_question == "who make's you":
+        st.write('i made by vishal')
+    elif 'remove background' in user_question or 'background remove' in user_question:
+        remove_background()
     # session state variable
     else:
         if 'chat_history' not in st.session_state:
@@ -167,13 +186,61 @@ def main():
             st.write("Chatbot:", response['response'])
 
 
+def main1(user_question):
+
+    st.title("Rock Chat App")
+
+    # Add customization options to the sidebar
+
+    conversational_memory_length = st.sidebar.slider(
+        'Conversational memory length:', 1, 10, value=5)
+
+    memory = ConversationBufferWindowMemory(k=conversational_memory_length)
+
+    # user_question = st.text_area("Ask a question:")
+
+    if user_question == 'what is my name' or user_question == "what's my name":
+        st.write('Your name is vishal')
+    elif user_question == 'who made you' or user_question == 'who makes you' or user_question == "who make's you":
+        st.write('i made by vishal')
+    elif 'remove background' in user_question or 'background remove' in user_question:
+        remove_background()
+    # session state variable
+    else:
+        if 'chat_history' not in st.session_state:
+            st.session_state.chat_history = []
+        else:
+            for message in st.session_state.chat_history:
+                memory.save_context({'input': message['human']}, {
+                                    'output': message['AI']})
+
+        # Initialize Groq Langchain chat object and conversation
+        groq_chat = ChatGroq(
+            groq_api_key=groq_api_key,
+            model_name=model
+        )
+
+        conversation = ConversationChain(
+            llm=groq_chat,
+            memory=memory
+        )
+
+        if user_question:
+            response = conversation(user_question)
+            message = {'human': user_question, 'AI': response['response']}
+            st.session_state.chat_history.append(message)
+            st.write("Chatbot:", response['response'])
+            
 def main2():
     st.title("Rock Chat App")
     if st.button('Run'):
         user_question = takecommand().lower()
         st.write(user_question)
-        if user_question == 'what is my name' or user_question == "what's my name":
+        speak(user_question)
+        if user_question == 'what is my name' or user_question == "what's my name" or user_question=='who developed you':
             st.write('Your name is vishal')
+        elif "what's the time" ==user_question or "what is the time" ==user_question or "what's the current time" ==user_question:
+            wish_me()
         elif user_question == 'who made you' or user_question == 'who makes you' or user_question == "who make's you":
             st.write('i made by vishal')
         elif 'remove background' in user_question and len(user_question)<30 or 'background remove' in user_question and len(user_question)<30:
@@ -250,7 +317,7 @@ def main2():
             os.startfile(codepath)
 
         else:
-            main()
+            main1(user_question)
 
 
 # st.sidebar.title('Select an LLM')
@@ -258,10 +325,11 @@ model = st.sidebar.selectbox(
     'Choose a model',
     ['mixtral-8x7b-32768', 'Advance AI', 'Remove Background']
 )
+
 if model == 'mixtral-8x7b-32768':
     main()
 elif model == 'Remove Background':
     remove_background()
 elif model == 'Advance AI':
-    model == 'mixtral-8x7b-32768'
+    model = 'mixtral-8x7b-32768'
     main2()
