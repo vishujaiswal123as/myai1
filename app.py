@@ -309,13 +309,11 @@ def main2():
 # st.sidebar.title('Select an LLM')
 model = st.sidebar.selectbox(
     'Choose a model',
-    ['mixtral-8x7b-32768', 'Advance AI', 'Remove Background']
+    ['mixtral-8x7b-32768', 'Remove Background']
 )
 
 if model == 'mixtral-8x7b-32768':
     main()
 elif model == 'Remove Background':
     remove_background()
-elif model == 'Advance AI':
-    model = 'mixtral-8x7b-32768'
-    main2()
+
